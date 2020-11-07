@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+const http = require('http');
+const webSocket = require('./socket');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
@@ -8,12 +10,12 @@ const cors = require('cors');
 const passport = require('passport');
 const passportConfig = require('./passport');
 const db = require('./models');
-
 const apiRouter = require('./routes');
 
 dotenv.config();
 
 const app = express();
+const server = http.Server(app);
 
 db.sequelize
   .sync()
@@ -44,8 +46,10 @@ app.use(passport.session());
 
 app.use('/api', apiRouter);
 
-app.listen(4000, () => {
+server.listen(4000, () => {
   console.log('server is running on port 4000');
 });
+
+webSocket(server, app);
 
 module.exports = app;

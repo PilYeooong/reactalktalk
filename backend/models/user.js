@@ -28,5 +28,7 @@ module.exports = class User extends Model {
   }
 
   static associate(db) {
+    db.User.belongsToMany(db.ChatRoom, { through: 'UserChatRoom', as: 'ChatRooms' });
+    db.User.hasMany(db.Chat);
   }
 }
