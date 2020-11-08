@@ -7,21 +7,39 @@ const User = require('../models/user');
 
 const router = express.Router();
 
+router.get('/', async (req, res, next) => {
+  try {
+    if (req.user) {
+      const user = await User.findOne({
+        where: { id: req.user.id },
+        attributes: {
+          exclude: ['password'],
+        }
+      });
+      return res.status(200).send(user);
+    } else {
+      return res.status(200).send(null);
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+})
+
 router.post('/join', isNotLoggedIn, async (req, res, next) => {
-  const { email, nick, password, money } = req.body;
+  const { email, nickname, password } = req.body;
   try {
     const exUser = await User.findOne({ where: { email } });
     if (exUser) {
       return res.redirect('/join?joinError=이미 가입된 이메일입니다.');
     }
     const hash = await bcrypt.hash(password, 12);
-    await User.create({
+    const newUser = await User.create({
       email,
-      nick,
+      nickname,
       password: hash,
-      money,
     });
-    return res.redirect('/');
+    return res.status(200).send(newUser);
   } catch (error) {
     console.error(error);
     return next(error);
@@ -34,23 +52,31 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
       console.error(authError);
       return next(authError);
     }
-    if (!user) {
-      return res.redirect(`/?loginError=${info.message}`);
+    if (info) {
+      return res
+        .status(401)
+        .send(
+          '해당 이메일로 가입된 계정이 없거나 비밀번호가 일치하지 않습니다.'
+        );
     }
-    return req.login(user, (loginError) => {
+    return req.login(user, async (loginError) => {
       if (loginError) {
         console.error(loginError);
         return next(loginError);
       }
-      return res.redirect('/');
+      const loginUser = await User.findOne({
+        where: { id: user.id },
+        attributes: { exclude: ['password'] },
+      });
+      return res.status(200).send(loginUser);
     });
   })(req, res, next);
 });
 
-router.get('/logout', isLoggedIn, (req, res) => {
+router.post('/logout', isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
-  res.redirect('/');
+  res.status(200).send('logout');
 });
 
 module.exports = router;
