@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import io from 'socket.io-client';
 
 const Chat = () => {
-  const socket = io.connect('http://localhost:4000');
+  const socket = io.connect('http://localhost:4000/chat');
   const [message, setMessage] = useState('');
 
   const onChangeMessage = useCallback((e) => {
@@ -21,6 +21,9 @@ const Chat = () => {
     socket.emit('test', test);
   }, []);
 
+  socket.on('reply', (data) => {
+    console.log(data);
+  })
   return (
     <div>
       <form action="" onSubmit={onSubmitMessage}>

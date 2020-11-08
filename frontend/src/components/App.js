@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import 'global-styles/main.scss';
 import axios from 'axios';
 
-import Chat from './Chat';
+import Home from 'pages/Home';
+import ChatRooms from 'pages/ChatRooms';
+import LogIn from 'pages/Login';
+import SignUp from 'pages/SignUp';
 
 function App() {
-  useEffect(() => {
-    const result = axios
-      .get('http://localhost:4000/api')
-      .then((res) => console.log(res.data))
-      .catch((err) => console.error(err));
-  }, []);
   return (
-    <div className="App">
-      <Chat />
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/signup' component={SignUp} />
+        <Route exact path='/login' component={LogIn} />
+        <Route exact path='/chatrooms' component={ChatRooms} />
+      </Switch>
+    </Router>
   );
 }
 

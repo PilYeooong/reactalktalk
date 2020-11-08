@@ -1,0 +1,46 @@
+.container {
+  height: 100vh;
+  
+  header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #efefef;
+    .logo {
+      width: 20%;
+    }
+    .top-menus {
+      width: 80%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      a {
+        margin-left: 1em;
+        margin-right: .5em;
+      }
+    }
+  }
+
+  .content {
+    height: 85%;
+  }
+
+  .bottom-menus {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #efefef;
+
+    div {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    & > div:first-child {
+      border-right: 1px solid black;
+    }
+  }
+}
