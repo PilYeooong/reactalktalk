@@ -10,30 +10,25 @@ module.exports = (server, app) => {
     }
   });
   app.set('io', io);
-  const chatroom = io.of('/chatroom');
-  const chat = io.of('/chat');
 
-  io.on('connection', (socket) => {
-    console.log('connected');
-  });
+  const room = io.of('/room');
+  const chat = io.of(/^\/chat-.+$/);
 
-  chatroom.on('connection', (socket) => {
-    console.log('chatroom 네임스페이스에 접속');
+  room.on('connection', (socket) => {
+    console.log('connected to room nsp');
     socket.on('disconnect', () => {
-      console.log('chatroom 네임스페이스 접속 해제');
+      console.log('disconnected from room nsp');
     });
   });
 
-  chat.on('connection', (socket) => {
-    console.log('chat 네임스페이스 접속');
-
-    socket.on('test', (data) => {
-      socket.emit('reply', data)
-    })
+  chat.on('connection', socket => {
+    const chat = socket.nsp;
+    console.log(chat.name);
+    // socket.join(chat.name);
+    chat.emit('hello', chat.name);
 
     socket.on('disconnect', () => {
-      console.log('chat 네임스페이스 접속해제');
+      chat.emit('leaveRoom', 'bye');
     })
-  })
-
+  });
 }
