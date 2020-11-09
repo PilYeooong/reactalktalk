@@ -24,14 +24,14 @@ const AppLayout = ({ children }) => {
   return (
     <div className="container">
       <header>
-        <div className="logo">리액톡</div>
+        <div className="logo"><Link to="/">리액톡</Link></div>
         <nav className="top-menus">
           {!me ? (
             <>
               <Link to="/signup">회원가입</Link>
               <Link to="/login">로그인</Link>
             </>
-          ) : <Link onClick={onClickLogOut}>로그아웃</Link>}
+          ) : <a onClick={onClickLogOut}>로그아웃</a>}
         </nav>
       </header>
       <div className="content">{children}</div>
