@@ -10,17 +10,17 @@ module.exports = (server, app) => {
     }
   });
   app.set('io', io);
-  const room = io.of('/room');
+  const chatroom = io.of('/chatroom');
   const chat = io.of('/chat');
 
   io.on('connection', (socket) => {
     console.log('connected');
   });
 
-  room.on('connection', (socket) => {
-    console.log('room 네임스페이스에 접속');
+  chatroom.on('connection', (socket) => {
+    console.log('chatroom 네임스페이스에 접속');
     socket.on('disconnect', () => {
-      console.log('room 네임스페이스 접속 해제');
+      console.log('chatroom 네임스페이스 접속 해제');
     });
   });
 
