@@ -15,7 +15,7 @@ const ChatRoomList = ({ chatRooms }) => {
   return (
     <div className="chatroom-list">
       {rooms.map((v) => (
-        <ChatRoom ket={v.id} chatRoom={v} />
+        <ChatRoom key={v.id} chatRoom={v} />
       ))}
       <Button name={'채팅방 생성'} to={'/new'} />
     </div>

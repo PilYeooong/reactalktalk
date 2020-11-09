@@ -1,0 +1,11 @@
+.message-form {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 5%;
+  background-color: lightgray;
+  input {
+    width: 200px;
+    border-radius: 5%;
+  }
+}

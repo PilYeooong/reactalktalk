@@ -19,7 +19,7 @@ const ChatRooms = () => {
   }, []);
 
   useEffect(() => {
-    const socket = io('http://localhost:4000/chatroom', {
+    const socket = io('http://localhost:4000/room', {
       transports: ['websocket']
     });
 
@@ -29,6 +29,9 @@ const ChatRooms = () => {
         data: room
       });
     });
+    return () => {
+      socket.disconnect();
+    }
   }, []);
 
   return (

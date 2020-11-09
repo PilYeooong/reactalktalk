@@ -5,11 +5,15 @@ import {
   LOAD_CHATROOMS_REQUEST,
   LOAD_CHATROOMS_SUCCESS,
   LOAD_CHATROOMS_FAILURE,
+  LOAD_CHATTINGS_REQUEST,
+  LOAD_CHATTINGS_SUCCESS,
+  LOAD_CHATTINGS_FAILURE,
   CREATE_CHATROOM_REQUEST,
   CREATE_CHATROOM_SUCCESS,
   CREATE_CHATROOM_FAILURE,
-  ADD_CHATROOM_TO_LIST_REQUEST,
-  ADD_CHATROOM_TO_LIST
+  SEND_CHAT_SUCCESS,
+  SEND_CHAT_FAILURE,
+  SEND_CHAT_REQUEST,
 } from 'reducers/chatRoom';
 
 function loadChatRoomsAPI() {
@@ -36,6 +40,32 @@ function* watchLoadChatRooms() {
   yield takeLatest(LOAD_CHATROOMS_REQUEST, loadChatRooms);
 }
 
+// chattings
+
+function loadChattingsAPI(data) {
+  return axios.get(`/chatroom/${data}`);
+}
+
+function* loadChattings(action) {
+  try {
+    const result = yield call(loadChattingsAPI, action.data);
+    yield put({
+      type: LOAD_CHATTINGS_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_CHATTINGS_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchLoadChattings() {
+  yield takeLatest(LOAD_CHATTINGS_REQUEST, loadChattings);
+}
+
 function createChatRoomAPI(data) {
   return axios.post('/chatroom', data);
 }
@@ -60,21 +90,35 @@ function* watchCreateChatRoom() {
   yield takeLatest(CREATE_CHATROOM_REQUEST, createChatRoom);
 }
 
-function* addChatRoomToList(action) {
-  yield put({
-    type: ADD_CHATROOM_TO_LIST,
-    data: action.data
-  })
+function sendChatAPI(data) {
+  return axios.post(`/chatroom/${data.ChatRoomId}`, data);
 }
 
-function* watchAddChatRoomToList() {
-  yield takeLatest(ADD_CHATROOM_TO_LIST_REQUEST, addChatRoomToList);
+function* sendChat(action) {
+  try {
+    const result = yield call(sendChatAPI, action.data);
+    yield put({
+      type: SEND_CHAT_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: SEND_CHAT_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchSendChat() {
+  yield takeLatest(SEND_CHAT_REQUEST, sendChat);
 }
 
 export default function* chatRoomSaga() {
   yield all([
     fork(watchLoadChatRooms),
+    fork(watchLoadChattings),
     fork(watchCreateChatRoom),
-    fork(watchAddChatRoomToList)
+    fork(watchSendChat)
   ]);
 }
