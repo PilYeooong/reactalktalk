@@ -1,5 +1,5 @@
 const express = require('express');
-const { ChatRoom, Chat } = require('../models');
+const { ChatRoom, Chat, User } = require('../models');
 
 const router = express.Router();
 
@@ -12,6 +12,7 @@ router.post('/', async (req, res, next) => {
     }
     const newChatRoom = await ChatRoom.create({
       name,
+      type: 'public'
     });
     const io = req.app.get('io');
     io.of('/room').emit('newRoom', newChatRoom);
@@ -27,7 +28,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     const chattings = await Chat.findAll({
       where: { ChatRoomId },
-      include: [{ model: ChatRoom }],
+      include: [{ model: User, attributes: ['nickname'] }],
     });
     return res.status(200).send(chattings);
   } catch (err) {
@@ -44,10 +45,51 @@ router.post('/:id', async (req, res, next) => {
       ChatRoomId,
       content: req.body.content,
     });
+    const chatToSend = Object.assign(newChat.toJSON(), {
+      User: { nickname: req.user.nickname },
+    });
     const io = req.app.get('io');
     const chatRoom = `chat-${ChatRoomId}`;
-    io.of(chatRoom).emit('newMessage', newChat);
+    io.of(chatRoom).emit('newMessage', chatToSend);
     return res.status(200).send('ok');
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/dm', async (req, res, next) => {
+  try {
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.post('/dm', async (req, res, next) => {
+  try {
+    
+    const dmRoom = await ChatRoom.create({
+      name
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/dm/:id', async (req, res, next) => {
+  try {
+    
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.post('/dm/:id', async (req, res, next) => {
+  try {
+    
   } catch (err) {
     console.error(err);
     next(err);

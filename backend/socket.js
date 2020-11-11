@@ -12,6 +12,7 @@ module.exports = (server, app) => {
   app.set('io', io);
 
   const room = io.of('/room');
+  const dm = io.of('/dm');
   const chat = io.of(/^\/chat-.+$/);
 
   room.on('connection', (socket) => {
@@ -20,6 +21,15 @@ module.exports = (server, app) => {
       console.log('disconnected from room nsp');
     });
   });
+
+  dm.on('connection', socket => {
+    // console.log('dm socket', socket);
+    console.log('connected to dm nsp')
+
+    socket.on('disconnect', () => {
+      console.log('disconnected from dm nsp');
+    })
+  })
 
   chat.on('connection', socket => {
     const chat = socket.nsp;

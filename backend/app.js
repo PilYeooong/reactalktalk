@@ -18,7 +18,7 @@ const app = express();
 const server = http.Server(app);
 
 db.sequelize
-  .sync()
+  .sync({ force: false })
   .then(() => {
     console.log('DB connected');
   })

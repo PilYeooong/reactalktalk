@@ -9,6 +9,10 @@ module.exports = class ChatRoom extends Model {
         allowNull: false,
         unique: true
       },
+      type: {
+        type: DataTypes.ENUM('public', 'dm'),
+        allowNull: false
+      }
     }, {
       modelName: 'ChatRoom',
       tableName: 'ChatRooms',
