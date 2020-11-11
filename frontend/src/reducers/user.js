@@ -2,6 +2,7 @@ import produce from 'immer';
 
 const initialState = {
   me: null,
+  userList: [],
 
   signupLoading: false,
   signupDone: false,
@@ -14,10 +15,18 @@ const initialState = {
   logOutLoading: false,
   logOutDone: false,
   logOutError: null,
+
+  loadUserListLoading: false,
+  loadUserListDone: false,
+  loadUserListError: null,
 }
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
 export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
+
+export const LOAD_USERLIST_REQUEST = 'LOAD_USERLIST_REQUEST';
+export const LOAD_USERLIST_SUCCESS = 'LOAD_USERLIST_SUCCESS';
+export const LOAD_USERLIST_FAILURE = 'LOAD_USERLIST_FAILURE';
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
@@ -48,6 +57,21 @@ const reducer = (state = initialState, action) => {
         draft.loadMyInfoLoading = false;
         draft.loadMyInfoDone = false;
         draft.loadMyInfoError = action.error;
+        break;
+      case LOAD_USERLIST_REQUEST:
+        draft.loadUserListLoading = true;
+        draft.loadUserListDone = false;
+        draft.loadUserListError = null;
+        break;
+      case LOAD_USERLIST_SUCCESS:
+        draft.loadUserListLoading = false;
+        draft.loadUserListDone = true;
+        draft.userList = action.data;
+        break;
+      case LOAD_USERLIST_FAILURE:
+        draft.loadUserListLoading = false;
+        draft.loadUserListDone = false;
+        draft.loadUserListError = action.error;
         break;
       case SIGN_UP_REQUEST:
         draft.signupLoading = true;

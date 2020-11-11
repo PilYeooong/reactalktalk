@@ -5,12 +5,13 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid #efefef;
+    height: 8%;
     .logo {
       width: 20%;
     }
     .top-menus {
       width: 80%;
-      height: 60px;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -23,11 +24,11 @@
   }
 
   .content {
-    height: 85%;
+    height: 84%;
   }
 
   .bottom-menus {
-    height: 55px;
+    height: 8%;
     display: flex;
     align-items: center;
     border-top: 1px solid #efefef;
@@ -41,6 +42,9 @@
       justify-content: center;
     }
     & > div:first-child {
+      border-right: 1px solid black;
+    }
+    & > div:nth-child(2) {
       border-right: 1px solid black;
     }
   }

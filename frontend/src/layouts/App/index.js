@@ -42,6 +42,9 @@ const AppLayout = ({ children }) => {
         <div className="chat-list">
           <Link to="/chatrooms">채팅방</Link>
         </div>
+        <div className="dm-list">
+          <Link to="/dm">DM</Link>
+        </div>
       </div>
     </div>
   );

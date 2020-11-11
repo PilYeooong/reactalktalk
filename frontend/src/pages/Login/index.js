@@ -10,15 +10,15 @@ const LogIn = () => {
   const history = useHistory();
   const me = useSelector(state => state.user.me);
 
-  const [email, setEmail, onChangeEmail] = useInput('');
-  const [password, setPassword, onChangePassword] = useInput('');
+  const [email, setEmail, onChangeEmail] = useInput('pilyeooong@gmail.com');
+  const [password, setPassword, onChangePassword] = useInput('123');
 
   useEffect(() => {
     if(me) {
       history.replace('/');
     }
   }, [me]);
-  
+
   const onSubmitForm = useCallback((e) => {
     e.preventDefault();
     dispatch({
