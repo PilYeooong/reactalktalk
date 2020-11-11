@@ -28,9 +28,12 @@ router.post('/dm', async (req, res, next) => {
     const { DMRoomName, userId } = req.body;
     const dmRoom = await ChatRoom.findOrCreate({ where: { name: DMRoomName, type: 'dm' }});
     if (dmRoom[1]) {
+      const user = await User.findOne({ where: { id: userId }});
       await dmRoom[0].addMembers(req.user);
       await dmRoom[0].addMembers(userId);
-    }     
+      const io = req.app.get('io');
+      io.of('/dm').to(user.nickname).emit('newDM', dmRoom[0]);
+    }
     return res.status(200).send(dmRoom[0]);
   } catch (err) {
     console.error(err);

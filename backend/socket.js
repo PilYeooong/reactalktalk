@@ -25,7 +25,7 @@ module.exports = (server, app) => {
   dm.on('connection', socket => {
     // console.log('dm socket', socket);
     console.log('connected to dm nsp')
-
+    socket.join(socket.handshake.query.nickname);
     socket.on('disconnect', () => {
       console.log('disconnected from dm nsp');
     })

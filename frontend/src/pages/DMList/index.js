@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import io from 'socket.io-client';
 
-import { LOAD_DMROOMS_REQUEST } from 'reducers/chatRoom';
+import { LOAD_DMROOMS_REQUEST, ADD_CHATROOM_TO_LIST } from 'reducers/chatRoom';
 
 import AppLayout from 'layouts/App';
 import ChatRoomList from 'components/ChatRoomList';
@@ -16,7 +16,17 @@ const DMList = () => {
 
   useEffect(() => {
     const socket = io('http://localhost:4000/dm', {
-      transports: ['websocket']
+      transports: ['websocket'],
+      query: {
+        nickname: `${me && me.nickname}`
+      }
+    });
+
+    socket.on('newDM', room => {
+      dispatch({
+        type: ADD_CHATROOM_TO_LIST,
+        data: room
+      });
     });
 
     return () => {

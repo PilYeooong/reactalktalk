@@ -29,6 +29,7 @@ const ChatRooms = () => {
         data: room
       });
     });
+    
     return () => {
       socket.disconnect();
     }
