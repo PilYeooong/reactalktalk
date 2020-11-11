@@ -23,6 +23,21 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.post('/dm', async (req, res, next) => {
+  try {
+    const { DMRoomName, userId } = req.body;
+    const dmRoom = await ChatRoom.findOrCreate({ where: { name: DMRoomName, type: 'dm' }});
+    if (dmRoom[1]) {
+      await dmRoom[0].addMembers(req.user);
+      await dmRoom[0].addMembers(userId);
+    }     
+    return res.status(200).send(dmRoom[0]);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   const { id: ChatRoomId } = req.params;
   try {
@@ -58,25 +73,7 @@ router.post('/:id', async (req, res, next) => {
   }
 });
 
-router.get('/dm', async (req, res, next) => {
-  try {
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
 
-router.post('/dm', async (req, res, next) => {
-  try {
-    
-    const dmRoom = await ChatRoom.create({
-      name
-    });
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
 
 router.get('/dm/:id', async (req, res, next) => {
   try {
