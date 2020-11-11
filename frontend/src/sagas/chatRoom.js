@@ -5,12 +5,18 @@ import {
   LOAD_CHATROOMS_REQUEST,
   LOAD_CHATROOMS_SUCCESS,
   LOAD_CHATROOMS_FAILURE,
+  LOAD_DMROOMS_FAILURE,
+  LOAD_DMROOMS_SUCCESS,
+  LOAD_DMROOMS_REQUEST,
   LOAD_CHATTINGS_REQUEST,
   LOAD_CHATTINGS_SUCCESS,
   LOAD_CHATTINGS_FAILURE,
   CREATE_CHATROOM_REQUEST,
   CREATE_CHATROOM_SUCCESS,
   CREATE_CHATROOM_FAILURE,
+  CREATE_DMROOM_REQUEST,
+  CREATE_DMROOM_SUCCESS,
+  CREATE_DMROOM_FAILURE,
   SEND_CHAT_SUCCESS,
   SEND_CHAT_FAILURE,
   SEND_CHAT_REQUEST,
@@ -40,7 +46,29 @@ function* watchLoadChatRooms() {
   yield takeLatest(LOAD_CHATROOMS_REQUEST, loadChatRooms);
 }
 
-// chattings
+function loadDMRoomsAPI() {
+  return axios.get('/chatrooms/dms');
+}
+
+function* loadDMRooms(action) {
+  try {
+    const result = yield call(loadDMRoomsAPI);
+    yield put({
+      type: LOAD_DMROOMS_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_DMROOMS_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchLoadDMRooms() {
+  yield takeLatest(LOAD_DMROOMS_REQUEST, loadDMRooms);
+}
 
 function loadChattingsAPI(data) {
   return axios.get(`/chatroom/${data}`);
@@ -90,6 +118,30 @@ function* watchCreateChatRoom() {
   yield takeLatest(CREATE_CHATROOM_REQUEST, createChatRoom);
 }
 
+function createDMRoomAPI(data) {
+  return axios.post('/chatroom/dm', data);
+}
+
+function* createDMRoom(action) {
+  try {
+    const result = yield call(createDMRoomAPI, action.data);
+    yield put({
+      type: CREATE_DMROOM_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: CREATE_DMROOM_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function* watchCreateDMRoom() {
+  yield takeLatest(CREATE_DMROOM_REQUEST, createDMRoom);
+}
+
 function sendChatAPI(data) {
   return axios.post(`/chatroom/${data.ChatRoomId}`, data);
 }
@@ -117,8 +169,10 @@ function* watchSendChat() {
 export default function* chatRoomSaga() {
   yield all([
     fork(watchLoadChatRooms),
+    fork(watchLoadDMRooms),
     fork(watchLoadChattings),
     fork(watchCreateChatRoom),
-    fork(watchSendChat)
+    fork(watchCreateDMRoom),
+    fork(watchSendChat),
   ]);
 }

@@ -20,7 +20,7 @@ const UserList = () => {
   return (
     <div className="userlist">
       {!me && <div className="userlist-message">유저목록을 보려면 로그인 하세요.</div>}
-      {me && userList.map((user, idx) => user.id !== me.id ? <User user={user} /> : null)}
+      {me && userList.map((user, idx) => user.id !== me.id ? <User user={user} me={me} /> : null)}
     </div>
   )
 }
